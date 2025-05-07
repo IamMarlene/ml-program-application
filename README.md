@@ -44,8 +44,6 @@ We implemented a comprehensive data science approach including:
 ### Key Findings
 Our analysis revealed several critical insights:
 
-![Computer Access Impact](visualizations/computer_access.png)
-
 Computer access emerged as the strongest predictor of program acceptance, with owners showing a 34.0% acceptance rate versus 28.7% for non-owners. Educational background significantly influenced selection outcomes, with Bachelor's degree holders achieving a 37.4% acceptance rate compared to 26.5% for high school graduates. Employment status also played a major role, with full-time employed applicants showing higher acceptance rates (37.2%) than unemployed applicants (27.8%).
 
 The optimized Gaussian Naive Bayes model achieved a 41.2% F1 score and identified potential fairness concerns, including a Disparate Impact score of 0.82 for applicants without computer access.
