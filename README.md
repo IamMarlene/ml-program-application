@@ -97,60 +97,7 @@ Permutation importance analysis identified the most influential features:
 
 ```
 ├── data/
-│   ├── processed/
-│   └── raw/
-├── models/
-│   ├── final_model_tech_moms.pkl
-│   ├── final_model_feature_columns.pkl
-│   ├── final_model_pca_transformer.pkl
-│   ├── final_model_scaler.pkl
-│   └── predict_acceptance_function.pkl
-├── notebooks/
-│   ├── 01_data_preparation.ipynb
-│   ├── 02_exploratory_analysis.ipynb
-│   ├── 03_model_benchmarking.ipynb
-│   └── 04_model_optimization.ipynb
-├── src/
-│   ├── data_processing/
-│   ├── modeling/
-│   ├── evaluation/
-│   └── deployment/
-├── visualizations/
-├── README.md
-└── requirements.txt
+├── code/
+└── README.md
 ```
 
-## Getting Started
-
-### Prerequisites
-
-- Python 3.8+
-- Required packages in requirements.txt
-
-### Installation
-
-```bash
-git clone https://github.com/yourusername/tech-moms-ml-acceptance-predictor.git
-cd tech-moms-ml-acceptance-predictor
-pip install -r requirements.txt
-```
-
-### Usage
-
-```python
-from models.predict import predict_acceptance
-
-# Example applicant data
-applicant_data = {
-    'has_computer': 1,
-    'education_category_High School': 0,
-    'education_category_Bachelor': 1,
-    'employment_simplified_Full-time': 1,
-    # Additional fields...
-}
-
-# Get prediction
-result = predict_acceptance(applicant_data)
-print(f"Acceptance probability: {result['probability']:.2f}")
-print(f"Predicted outcome: {'Accepted' if result['prediction'] == 1 else 'Not accepted'}")
-```
