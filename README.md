@@ -1,119 +1,158 @@
-# 📊 Tech Moms Application Model: Final Report & Production Insights
+# Tech-Moms ML Acceptance Predictor
 
----
+ML project predicting Tech-Moms program acceptance using data from 1,700+ applications. Found computer access, education level, and employment status strongly influence who gets in! Used Gaussian NB model (41% F1 score) and spotted some fairness concerns (DI of 0.82). Includes cool visualizations and practical recommendations to make the program.
 
-## 🧾 Executive Summary
+## Project Title
 
-### 🎯 Goal
-To deploy a production-ready predictive model that assists Tech Moms program administrators in identifying applicants most likely to be accepted—maximizing both efficiency and fairness in the selection process.
+The Tech-Moms program aims to help women transition into technology careers, but program administrators face challenges in making the selection process consistent, fair, and equitable while efficiently allocating limited resources. Current manual evaluation processes may introduce unintended biases and miss important patterns in successful applications.
 
-### 📏 Metrics
-- **F1 Score** (primary metric for imbalanced classes)
-- **Recall & Precision**
-- **Accuracy & ROC AUC**
-- **Calibration MAE**
+The objective of this project is to develop a machine learning model to predict Tech-Moms program acceptance by December 2024, identify key factors influencing selection decisions, and provide recommendations to improve program accessibility for diverse applicants.
 
-### 🔍 Key Findings
-- **Complement Naive Bayes** with PCA + SMOTE offers best balance of recall, precision, and calibration.
-- Final model identifies ~50% more true positives than baseline.
-- Probability calibration MAE improved to **0.1175**.
+## Data Dictionary
 
-### ⚠️ Risks & Assumptions
-- Assumes past acceptance decisions reflect future criteria.
-- Limitations include potential **bias** in demographic features and **small dataset size** (n = 1732).
-- Despite SMOTE, class imbalance may still influence precision.
+| Feature | Type | Dataset | Description |
+|---------|------|---------|-------------|
+| `has_computer` | Binary | Tech-Moms Applications | Whether applicant owns a computer (1 = Yes, 0 = No) |
+| `computer_availability` | Categorical | Tech-Moms Applications | Type of computer owned (Laptop PC, Laptop Mac, None) |
+| `education_category` | Categorical | Tech-Moms Applications | Highest education level (High School, Bachelor's, Advanced Degree) |
+| `employment_simplified` | Categorical | Tech-Moms Applications | Employment status (Full-time, Part-time, Not Employed) |
+| `ethnicity_simplified` | Categorical | Tech-Moms Applications | Simplified ethnicity categories |
+| `children_category` | Categorical | Tech-Moms Applications | Number of children (None, 1, 2-3, 4+) |
+| `application_quarter` | Categorical | Tech-Moms Applications | Quarter when application was submitted (Q1-Q4) |
+| `application_month` | Categorical | Tech-Moms Applications | Month when application was submitted |
+| `is_weekend` | Binary | Tech-Moms Applications | Whether application was submitted on weekend (1 = Yes, 0 = No) |
+| `income_level` | Categorical | Tech-Moms Applications | Income category of applicant |
+| `cohort` | Categorical | Tech-Moms Applications | Program cohort applied to |
+| `accepted` | Binary | Tech-Moms Applications | Target variable - whether applicant was accepted (1 = Yes, 0 = No) |
 
----
+Class distribution:
+- Accepted: 32.7% (567 applications)
+- Not accepted: 67.3% (1,165 applications)
 
-## 🧪 Step-by-Step Model Walkthrough
+## Executive Summary
 
----
+### Problem Statement
+The Tech-Moms program faces challenges in making consistent and fair selection decisions while maximizing the impact of limited program resources. This project analyzed 1,732 program applications to understand acceptance patterns and develop a predictive model to assist in the selection process.
 
-### 🧭 Exploratory Data Analysis (EDA)
+### Methodology
+We implemented a comprehensive data science approach including:
+1. **Data Preparation**: Cleaning application data, handling missing values, and engineering temporal features
+2. **Exploratory Analysis**: Examining demographic patterns, acceptance rates, and correlations
+3. **Model Development**: Testing multiple algorithms with special attention to the class imbalance challenge
+4. **Optimization**: Applying dimensionality reduction, threshold tuning, and fairness assessment
 
-#### 📌 Variables of Interest
-- `education`, `employment`, `race`, `ethnicity`, `children`
-- `has_computer`, `computer_type`
-- `month`, `quarter`, `is_weekend`
+### Key Findings
+Our analysis revealed several critical insights:
 
-#### 🧼 Outlier Handling
-- No significant numeric outliers found. Categorical levels were reviewed.
+![Computer Access Impact](visualizations/computer_access.png)
 
-#### 🩺 Imputation
-- **Mode imputation** for categorical values
-- Binary flags to preserve data integrity when necessary
+Computer access emerged as the strongest predictor of program acceptance, with owners showing a 34.0% acceptance rate versus 28.7% for non-owners. Educational background significantly influenced selection outcomes, with Bachelor's degree holders achieving a 37.4% acceptance rate compared to 26.5% for high school graduates. Employment status also played a major role, with full-time employed applicants showing higher acceptance rates (37.2%) than unemployed applicants (27.8%).
 
----
+The optimized Gaussian Naive Bayes model achieved a 41.2% F1 score and identified potential fairness concerns, including a Disparate Impact score of 0.82 for applicants without computer access.
 
-## 🤖 Final Model Pipeline
+### Conclusion
+This project provides Tech-Moms administrators with a data-driven tool to assist in application screening while highlighting important equity considerations. The identified acceptance patterns suggest several potential barriers to program access that administrators should address to ensure the program reaches its intended audience effectively.
 
-### 1. Model Selection
-- Benchmarked 8 models using unified metrics
-- **Complement Naive Bayes** chosen for highest F1 and calibrated recall
+### Next Steps
+1. **Technology Access Initiative**: Implement a laptop lending program to reduce barriers for applicants without computers
+2. **Educational Outreach**: Target recruitment to applicants with high school-only education
+3. **Selection Criteria Review**: Ensure selection processes don't unintentionally favor certain demographics
+4. **Continuous Improvement**: Expand the model to incorporate program completion and career transition data
 
-### 2. Pipeline Implementation
-- **PCA** reduced 37 features to 22 (95.4% variance retained)
-- **SMOTE** balanced the class distribution
-- **Complement Naive Bayes** classifier used for final predictions
+## Project Components
 
-### 3. Evaluation Results
-| Metric       | Value  |
-|--------------|--------|
-| F1 Score     | 0.508  |
-| Recall       | 0.500  |
-| Precision    | 0.432  |
-| ROC AUC      | 0.601  |
-| Calibration MAE | 0.1175 |
+This repository contains:
 
-### 4. Prediction & Inference
-- Applied model to **2024 applicant data**
-- Produced both **class labels** and **probability scores**
-- Used **permutation importance** for explainability
+1. **Data Processing Pipeline**: Code for cleaning and preprocessing applications
+2. **Exploratory Analysis**: Detailed analysis of application patterns and acceptance rates
+3. **Predictive Models**: Implementation of multiple ML algorithms with Gaussian Naive Bayes + PCA emerging as the best performer
+4. **Fairness Assessment**: Evaluation of potential biases using standard metrics
+5. **Visualization Components**: Charts and graphs illustrating key findings
+6. **Deployment System**: Production-ready prediction function for scoring new applicants
 
----
+## Model Performance
 
-## 📈 Visual Insights
+We tested multiple algorithms and optimization strategies:
 
-- **Confusion Matrix**: Improved TP/FP balance
-- **Calibration Curve**: Almost ideal alignment
-- **Probability Histogram**: Clear class separation
-- **Feature Importance**: Top contributors visualized
+| Model Approach | F1 Score | ROC AUC |
+|----------------|----------|---------|
+| Logistic Regression | 35.8% | 0.584 |
+| Random Forest | 38.7% | 0.593 |
+| Gradient Boosting | 34.9% | 0.581 |
+| Gaussian NB | 50.4% | 0.595 |
+| Complement NB | 52.0% | 0.601 |
+| **PCA + Threshold Optimization** | **41.2%** | **0.594** |
 
----
+Our final model combines PCA dimensionality reduction with threshold optimization to achieve the best balance of precision and recall.
 
-## 🚀 Production Readiness
+## Key Feature Importance
 
-### 🔄 Ongoing Validation
-- Track model drift and performance decay
-- Implement weekly F1 score monitoring
-- Run A/B tests comparing manual vs. model-assisted review
+Permutation importance analysis identified the most influential features:
 
-### 🏭 Enterprise Deployment Steps
-1. **Serialize model**: `final_model_pipeline.pkl`
-2. Wrap in REST API using **Flask** or **FastAPI**
-3. Create **batch scoring** utility for CSV uploads
-4. Auto-generate cohort-level insights
+1. Computer access (score = 0.0055)
+2. Education level - High School (score = 0.0046)
+3. Ethnicity factors - American Indian/Alaska Native (score = 0.0035)
+4. Computer availability - No laptop (score = 0.0029)
+5. Computer availability - Mac laptop (score = 0.0023)
 
-### 🌐 Public Accessibility
-- Host on [GitHub](https://github.com/)
-- Deploy interactive app on [Streamlit](https://streamlit.io/) or [Hugging Face Spaces](https://huggingface.co/spaces)
-- Connect to **Google Forms** or **Airtable** for non-technical use
+## Repository Structure
 
----
+```
+├── data/
+│   ├── processed/
+│   └── raw/
+├── models/
+│   ├── final_model_tech_moms.pkl
+│   ├── final_model_feature_columns.pkl
+│   ├── final_model_pca_transformer.pkl
+│   ├── final_model_scaler.pkl
+│   └── predict_acceptance_function.pkl
+├── notebooks/
+│   ├── 01_data_preparation.ipynb
+│   ├── 02_exploratory_analysis.ipynb
+│   ├── 03_model_benchmarking.ipynb
+│   └── 04_model_optimization.ipynb
+├── src/
+│   ├── data_processing/
+│   ├── modeling/
+│   ├── evaluation/
+│   └── deployment/
+├── visualizations/
+├── README.md
+└── requirements.txt
+```
 
-## 📎 Technical Appendix
+## Getting Started
 
-### 🧰 Libraries Used
-- `pandas`, `numpy`, `scikit-learn`, `matplotlib`, `seaborn`
-- `imbalanced-learn` (SMOTE)
-- `joblib`, `pickle` (model serialization)
+### Prerequisites
 
-### 📂 Files and Resources
-| File                          | Description                                 |
-|-------------------------------|---------------------------------------------|
-| `tech_moms_preprocessed.csv` | Cleaned dataset                             |
-| `final_model_pipeline.pkl`   | Serialized production-ready model pipeline  |
-| `final_model_metrics.json`   | Final model performance metrics             |
-| `model_feature_columns.pkl`  | Feature list used in modeling               |
+- Python 3.8+
+- Required packages in requirements.txt
 
----
+### Installation
+
+```bash
+git clone https://github.com/yourusername/tech-moms-ml-acceptance-predictor.git
+cd tech-moms-ml-acceptance-predictor
+pip install -r requirements.txt
+```
+
+### Usage
+
+```python
+from models.predict import predict_acceptance
+
+# Example applicant data
+applicant_data = {
+    'has_computer': 1,
+    'education_category_High School': 0,
+    'education_category_Bachelor': 1,
+    'employment_simplified_Full-time': 1,
+    # Additional fields...
+}
+
+# Get prediction
+result = predict_acceptance(applicant_data)
+print(f"Acceptance probability: {result['probability']:.2f}")
+print(f"Predicted outcome: {'Accepted' if result['prediction'] == 1 else 'Not accepted'}")
+```
